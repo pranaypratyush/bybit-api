@@ -1,13 +1,12 @@
-import { DefaultLogger } from '../src';
-import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
+import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
 
 // or
-// import { DefaultLogger, WebsocketClient } from 'bybit-api';
+// import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
 (async () => {
   const logger = {
     ...DefaultLogger,
-    // silly: () => {},
+    silly: () => {},
   };
 
   const key = process.env.API_KEY;
@@ -17,7 +16,7 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
   const market = 'linear';
   // Inverse Perp
   // const market = 'inverse';
-  // const market = 'spot';
+  // const market = 'spotv3';
 
   // Note: the WebsocketClient defaults to testnet. Set `livenet: true` to use live markets.
   const wsClient = new WebsocketClient(
@@ -25,7 +24,7 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
       key: key,
       secret: secret,
       market: market,
-      livenet: true,
+      // testnet: true,
       restOptions: {
         // enable_time_sync: true,
       },
@@ -51,5 +50,6 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
   });
 
   // subscribe to private endpoints
+  // check the api docs in your api category to see the available topics
   wsClient.subscribe(['position', 'execution', 'order', 'wallet']);
 })();

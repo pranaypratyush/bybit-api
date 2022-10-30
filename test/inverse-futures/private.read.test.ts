@@ -1,15 +1,38 @@
 import { InverseFuturesClient } from '../../src/inverse-futures-client';
 import { successResponseList, successResponseObject } from '../response.util';
 
-describe('Public Inverse-Futures REST API GET Endpoints', () => {
-  const useLivenet = true;
+describe('Private Inverse-Futures REST API GET Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
-  const api = new InverseFuturesClient(API_KEY, API_SECRET, useLivenet);
+  const api = new InverseFuturesClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
-  const symbol = 'BTCUSDU22';
+  let symbol = '';
+
+  beforeAll(async () => {
+    const symbolsResponse = await api.getSymbols();
+
+    const prefix = 'BTCUSD';
+
+    const futuresAsset = symbolsResponse.result
+      .filter((row) => row.name.startsWith(prefix))
+      .find((row) => {
+        const splitSymbol = row.name.split(prefix);
+        return splitSymbol[1] && splitSymbol[1] !== 'T';
+      });
+
+    if (!futuresAsset?.name) {
+      throw new Error('No symbol');
+    }
+
+    symbol = futuresAsset?.name;
+    console.log('Symbol: ', symbol);
+  });
 
   it('getApiKeyInfo()', async () => {
     expect(await api.getApiKeyInfo()).toMatchObject(successResponseObject());

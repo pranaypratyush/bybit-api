@@ -1,8 +1,7 @@
 import { API_ERROR_CODE, LinearClient } from '../../src';
 import { successResponseObject } from '../response.util';
 
-describe('Private Inverse-Futures REST API POST Endpoints', () => {
-  const useLivenet = true;
+describe('Private Linear REST API POST Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -11,7 +10,11 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new LinearClient(API_KEY, API_SECRET, useLivenet);
+  const api = new LinearClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
   const symbol = 'BTCUSDT';
@@ -42,7 +45,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to cancel',
     });
   });
 
@@ -64,7 +66,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -85,7 +86,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.INSUFFICIENT_BALANCE_FOR_ORDER_COST_LINEAR,
-      ret_msg: 'Insufficient wallet balance',
     });
   });
 
@@ -97,7 +97,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE_LINEAR,
-      ret_msg: 'order not exists or too late to cancel',
     });
   });
 
@@ -119,7 +118,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE_LINEAR,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -132,7 +130,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.AUTO_ADD_MARGIN_NOT_MODIFIED,
-      ret_msg: 'autoAddMargin not modified',
     });
   });
 
@@ -146,7 +143,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED_LINEAR,
-      ret_msg: 'Isolated not modified',
     });
   });
 
@@ -158,7 +154,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_MODE_NOT_MODIFIED,
-      ret_msg: 'position mode not modified',
     });
   });
 
@@ -170,7 +165,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.SAME_SLTP_MODE_LINEAR,
-      ret_msg: 'same tp sl mode2',
     });
   });
 
@@ -183,7 +177,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_SIZE_IS_ZERO,
-      ret_msg: 'position size is zero',
     });
   });
 
@@ -196,7 +189,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
-      ret_msg: 'leverage not modified',
     });
   });
 
@@ -209,7 +201,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.CANNOT_SET_LINEAR_TRADING_STOP_FOR_ZERO_POS,
-      ret_msg: 'can not set tp/sl/ts for zero position',
     });
   });
 
@@ -222,7 +213,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.RISK_ID_NOT_MODIFIED,
-      ret_msg: 'risk id not modified',
     });
   });
 });
